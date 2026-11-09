@@ -1,6 +1,6 @@
 # Tooling inventory
 
-> Snapshot: 2026-11-04 · Primary workstation: Intel MacBook Pro · Scope: local tools, workflows, and related GitHub projects.
+> Snapshot: 2026-11-09 · Primary workstation: Intel MacBook Pro · Scope: local tools, workflows, and related GitHub projects.
 
 This inventory is organized by how much a tool helps an AI agent act independently, followed by tools and workflows that primarily help the user. Packaged or ambiguous application assets are collected at the end.
 
@@ -13,8 +13,9 @@ This inventory is organized by how much a tool helps an AI agent act independent
 | **Desktop Commander** | Local MCP for filesystem access, terminal commands, process inspection, and file editing. | Local MCP active. |
 | **Arena Bridge** — `vernikr/arena-bridge` | MCP/CLI bridge for working with the computer: files, shell, Chrome, mouse and keyboard, and process control. Supports confirmation for mutating actions. | CLI installed globally via npm (`0.20.6`); source repository exists. |
 | **browser-agent** — `vernikr-personal/browser-agent` | VPS service that controls a real Chrome instance through X11, DOM access, screenshots, mouse, and keyboard. | VPS service recorded in the setup; repository exists. |
+| **agent-browser** | Browser automation CLI/MCP using Chrome DevTools Protocol; can attach to an existing Chrome session and return compact accessibility snapshots. | Local CLI/config directory present; included in OpenCode MCP configuration. |
 | **browser-agent-mcp** — `vernikr-personal/browser-agent-mcp` | MCP adapter that exposes browser-agent capabilities to agents. | Source repository exists; runtime status not independently verified in this audit. |
-| **TinyFish MCP** | Cloud-browser/search extraction integration for agents. | Configured in Cursor; runtime and account availability not tested. |
+| **TinyFish MCP** | Cloud web search, page extraction, browser automation, and monitoring. TinyResearch adds multi-step Deep Research reports with claim-level citations; TinySet builds structured datasets from public web pages. | Configured in Cursor; Search and Fetch are free (30 requests/min and 500/hour; 150 URLs/min and 1,000/day). TinyResearch is available through MCP/API/CLI/SDK; Deep reports cost $2 and Max $3 after any account credits. Public web only. |
 | **Figma MCP integrations** | Give agents access to Figma context. | Framelink configured in Cursor; Figma Remote configured in VS Code; Claude Code integration found but requires authorization. |
 | **Codex Node REPL** | Persistent Node execution environment for tool-assisted coding and analysis. | Enabled in Codex. |
 | **Codex Computer Use** | Computer interaction capability in Codex. | Present in configuration, disabled. |
@@ -26,6 +27,7 @@ This inventory is organized by how much a tool helps an AI agent act independent
 | **research-workspace** — `vernikr/research-workspace` | Agentic research system combining Freebuff, HyperResearch, and browser-agent. Includes the `rw` orchestrator, 19 Skills, 16 specialized agents, staged search and investigation, contradiction tracking, synthesis, critics, citation checks, and resumable runs. | Source repository inspected; repository documentation describes the workflow. |
 | **HyperResearch** | Research CLI used for broad search and structured investigation. | Installed through uv (`0.12.0`). |
 | **Exa Search / Exa Contents** | Skills for web search and extracting page contents. | Local Skills found in `~/.agents/skills/`; Exa connector also available in ChatGPT. |
+| **Parallel MCP 2.0** | Unified web search, page extraction, grounded decisions, and multi-step cited research through one hosted MCP endpoint. | Configured globally in OpenCode and in the tooling-inventory Freebuff project. Free `web_search`, `web_fetch`, and `web_decisions`; `web_research` requires Parallel sign-in and is billed. OmniRush currently blocks remote MCP servers, so it cannot run there. |
 | **TinyFish** | Cloud browser for web exploration and extraction. | Cursor MCP configuration found; see the computer-control section. |
 | **biblio-mcp** — `vernikr-personal/biblio-mcp` | MCP for searching books and academic publications and retrieving available files. | Source repository exists; local runtime not confirmed. |
 | **Gemini CLI / MCP** — `vernikr/gemini` | Personal Gemini CLI/MCP for text and document analysis, file workflows, and TTS. | CLI installed through uv (`0.28.0`); source repository exists. MCP config files were found but were empty at audit time. |
@@ -43,6 +45,7 @@ This inventory is organized by how much a tool helps an AI agent act independent
 | **Serena Agent** | Code-aware agent tooling for navigating and working with codebases. | Installed through uv (`1.7.1.dev0`). |
 | **Semgrep** | Static analysis and security scanning. | CLI installed through uv. |
 | **Ruff** | Fast Python linting and formatting. | CLI installed through uv. |
+| **ty** | Fast Python type checker and language server from Astral. | Installed globally with `uv tool install ty`; `ty check` available. |
 | **Playwright** | Browser automation and browser testing. | Installed through uv. |
 | **Size Report** — `vernikr-personal/size-report` | CLI for examining project size and structure. | Source repository exists; local CLI installation not confirmed. |
 | **CodeScene CLI Skills** — `vernikr/codescene-cli-agent-skills` | Six Skills that help agents use CodeScene CLI. | Source repository exists. |
@@ -66,7 +69,7 @@ This inventory is organized by how much a tool helps an AI agent act independent
 
 This is a curated list of relevant utilities, not a complete dump of every MacPorts package or transitive dependency.
 
-## 2. Tools and workflows primarily for the user
+## 1A. Free or free-quota alternatives worth evaluating\n\nThese are candidates from the 2026-11-09 review, not all installed. Free access and limits are recorded explicitly.\n\n| Tool | Potential improvement | Free access and trade-offs |\n|---|---|---|\n| [Cua Driver](https://github.com/trycua/cua) | Native macOS app control through MCP while keeping the target window in the background; useful to compare with Arena Bridge/Peekaboo. | MIT; supports macOS Intel x86_64. Requires Accessibility and Screen Recording permissions; some drag-and-drop actions need foreground interaction. Not installed. |\n| [Toolport](https://toolport.app/) | Local MCP gateway to configure servers once for multiple agent clients, with tool-change checks. | Free MIT desktop app, no account, 45 supported agents on one machine. Cross-device sync and hosted team features are paid; self-hosted Teams server is free up to 10 users. Not installed. |\n| [OpenAlex API / MCP](https://help.openalex.org/access/pricing/) | Specialized scholarly search, author/work metadata, citations, and DOI/reference resolution. | $1 API usage/day with a free key, no payment method; $0.10/day without a key. API rate limits apply; not a full-text repository. Not installed. |\n| [Groq API](https://console.groq.com/docs/rate-limits) | Extra inference provider and Whisper STT fallback for `gemini-router`. | Free tier includes selected models such as GPT-OSS-120B and Qwen3.8-27B; model-specific limits include 30 RPM, 1,000 RPD, 8K TPM and 200K TPD for these models. Limits vary by model/account. Not installed. |\n| [Figbridge](https://github.com/rudraptpsingh/figbridge) | Local Figma-to-agent MCP with design inspection, token/component mapping, import, linting, and visual-diff workflows. | MIT, local, no account or Dev seat; 54 tools advertised. Young project; requires its Figma plugin and local bridge. Not installed. |\n\n## 2. Tools and workflows primarily for the user
 
 ### Custom macOS Quick Actions
 
@@ -155,8 +158,8 @@ The projects below are included as source references and are not automatically c
 
 ## 4. MCP and configuration notes
 
-- **Confirmed active locally:** Desktop Commander.
-- **Configured in IDEs:** TinyFish and Framelink Figma in Cursor; Figma Remote in VS Code.
+- **Confirmed active locally:** Desktop Commander.\n- **Parallel MCP 2.0:** OpenCode global configuration added; OAuth/connection still needs confirmation in the app. Freebuff project configuration is in `.agents/mcp.json` and requires the first-load trust approval. OmniRush configuration is present but its current policy blocks remote MCP servers, so Parallel cannot run there.\n- **Python typing:** `ty` installed globally through uv.
+- **Configured in IDEs:** TinyFish and Framelink Figma in Cursor; Figma Remote in VS Code; Parallel MCP 2.0 in OpenCode and this Freebuff project.
 - **Requires authorization:** Figma integration in Claude Code.
 - **Enabled:** Codex Node REPL.
 - **Disabled:** Codex Computer Use.
